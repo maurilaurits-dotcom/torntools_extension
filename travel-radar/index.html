@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel Radar for TornTools</title>
+<meta name="description" content="A TornTools feature proposal with a working branch: learn how long each foreign item stays empty, and tell players when to fly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+	--paper: #e8ecf0;
+	--card: #f6f8fa;
+	--ink: #142130;
+	--muted: #536274;
+	--rule: #c5ced8;
+	--board: #0e1a29;
+	--board-line: #1f3148;
+	--amber: #ffb22e;
+	--amber-dim: #c98a1d;
+	--signal: #3fd98c;
+	--link: #1f5fbf;
+	--focus: #1f5fbf;
+	color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--paper: #0b121b; --card: #111c29; --ink: #dbe3ec; --muted: #9aa9ba; --rule: #26374c;
+		--board: #08111c; --board-line: #1b2b40; --link: #7fb0ff; --focus: #7fb0ff; color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--paper: #0b121b; --card: #111c29; --ink: #dbe3ec; --muted: #9aa9ba; --rule: #26374c;
+	--board: #08111c; --board-line: #1b2b40; --link: #7fb0ff; --focus: #7fb0ff; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.6 "Barlow", system-ui, sans-serif; }
+a { color: var(--link); text-underline-offset: 2px; }
+a:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+code { overflow-wrap: anywhere; font-size: 0.92em; background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 0 4px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+.prose { max-width: 70ch; }
+header.top { padding-top: 56px; padding-bottom: 28px; }
+h1 { font: 700 clamp(3rem, 2rem + 6vw, 6.25rem)/0.9 "Barlow Condensed", sans-serif; letter-spacing: -0.01em; margin: 0 0 18px; }
+.lede { font-size: 1.25rem; line-height: 1.45; max-width: 46ch; margin: 0 0 18px; }
+.byline { color: var(--muted); font-size: 0.95rem; margin: 0; }
+.byline span + span::before { content: ""; display: inline-block; width: 1.2em; }
+
+.board { background: var(--board); color: var(--amber); border: 1px solid var(--board-line); border-radius: 10px; padding: 18px 18px 10px; box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 18px 40px -24px rgba(5, 12, 22, 0.8); }
+.board-head { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin-bottom: 12px; font: 600 1rem/1.2 "Barlow Condensed", sans-serif; letter-spacing: 0.04em; }
+.board-title { font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.08em; margin: 0; color: var(--amber); }
+.board-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; color: var(--amber-dim); }
+.live { display: inline-flex; align-items: center; gap: 6px; }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 0 3px rgba(63, 217, 140, 0.18); }
+.live.off::before { background: #e5484d; box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.2); }
+.board label { color: var(--amber-dim); }
+.board select { font: 600 1rem "Barlow Condensed", sans-serif; letter-spacing: 0.04em; background: var(--board-line); color: var(--amber); border: 1px solid #2d4563; border-radius: 6px; padding: 4px 8px; margin-left: 6px; }
+.board table { width: 100%; border-collapse: collapse; font: 600 1.15rem/1.25 "Barlow Condensed", sans-serif; letter-spacing: 0.03em; text-transform: uppercase; }
+.board th { text-align: left; font-weight: 500; font-size: 0.85rem; letter-spacing: 0.08em; color: var(--amber-dim); padding: 6px 8px; border-bottom: 1px solid var(--board-line); }
+.board td { padding: 9px 8px; border-bottom: 1px solid var(--board-line); vertical-align: top; }
+.board tbody tr:last-child td { border-bottom: none; }
+.board .sub { display: block; font-weight: 500; font-size: 0.85rem; color: var(--amber-dim); letter-spacing: 0.05em; }
+.board .go { color: var(--signal); }
+.board .wait { color: var(--amber-dim); }
+.board .num { font-variant-numeric: tabular-nums; }
+.board-scroll { overflow-x: auto; }
+.board-note { text-transform: none; letter-spacing: 0; font: 400 0.9rem/1.45 "Barlow", sans-serif; color: #93a4b8; margin: 12px 2px 4px; }
+.board code { background: var(--board-line); border-color: #2d4563; color: #c7d3e0; }
+.board .empty td { color: var(--amber-dim); text-transform: none; font-weight: 500; }
+
+main section { padding: 52px 0 8px; }
+h2 { font: 700 2.4rem/1 "Barlow Condensed", sans-serif; margin: 0 0 14px; }
+h3 { font: 600 1.35rem/1.2 "Barlow Condensed", sans-serif; margin: 26px 0 6px; letter-spacing: 0.01em; }
+.adds { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px 28px; margin: 18px 0 8px; }
+.adds div { border-top: 3px solid var(--ink); padding-top: 10px; }
+.adds h3 { margin-top: 0; }
+.adds p { margin: 0; }
+.toasts { display: grid; gap: 10px; margin: 22px 0 6px; max-width: 560px; }
+.toast { background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--amber); border-radius: 8px; padding: 10px 14px; line-height: 1.4; }
+.toast strong { display: block; }
+.toast.go { border-left-color: var(--signal); }
+figure { margin: 26px 0 0; }
+figure img { display: block; width: 100%; max-width: 784px; height: auto; border-radius: 6px; border: 1px solid var(--rule); }
+figcaption { color: var(--muted); font-size: 0.95rem; margin-top: 8px; max-width: 70ch; }
+
+table.data { border-collapse: collapse; margin: 12px 0 8px; min-width: min(100%, 560px); }
+.data th, .data td { text-align: left; padding: 7px 14px 7px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.data thead th { font-weight: 600; font-size: 0.9rem; color: var(--muted); }
+.data .num { text-align: right; font-variant-numeric: tabular-nums; padding-left: 14px; }
+.data .where { color: var(--muted); font-weight: 400; }
+.table-scroll { overflow-x: auto; }
+.facts { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 10px 22px; margin: 16px 0; max-width: 900px; }
+.facts dt { font-weight: 600; }
+.facts dd { margin: 0; min-width: 0; }
+ol.questions { padding-left: 1.3em; max-width: 70ch; }
+ol.questions li { margin-bottom: 12px; padding-left: 4px; }
+ul.limits { max-width: 70ch; padding-left: 1.2em; }
+ul.limits li { margin-bottom: 8px; }
+footer { margin-top: 56px; padding: 26px 0 48px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.95rem; }
+footer p { margin: 4px 0; }
+@media (max-width: 640px) {
+	body { font-size: 16px; }
+	header.top { padding-top: 36px; }
+	.board table { min-width: 0; }
+	.board td, .board th { padding-left: 5px; padding-right: 5px; }
+	.board { padding: 14px 10px 6px; }
+	.board table { font-size: 1rem; }
+	.board .col-learned { display: none; }
+	.facts { grid-template-columns: minmax(0, 1fr); gap: 2px 0; }
+	.facts dd { margin-bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top wrap">
+	<h1>Travel Radar</h1>
+	<p class="lede">A feature for TornTools that learns how long each foreign item stays empty, and tells you when to fly so you land as it restocks.</p>
+	<p class="byline"><span>Proposed by <a href="https://github.com/maurilaurits-dotcom">maurilaurits-dotcom</a></span><span>Working branch: <a href="https://github.com/maurilaurits-dotcom/torntools_extension/tree/feature/travel-radar">feature/travel-radar</a></span><span>2026-10-29</span></p>
+</header>
+
+<div class="wrap">
+	<section class="board" aria-labelledby="board-title">
+		<div class="board-head">
+			<h2 class="board-title" id="board-title">Departures, as the radar sees them</h2>
+			<div class="board-meta">
+				<span class="live off" id="board-status" role="status" aria-live="polite">Starting…</span>
+				<label>Ticket<select id="ticket"><option value="standard">Standard</option><option value="airstrip">Airstrip</option><option value="private">Private</option><option value="business">Business</option></select></label>
+			</div>
+		</div>
+		<div class="board-scroll"><table>
+			<thead><tr><th scope="col">Destination</th><th scope="col">Item</th><th scope="col">Shelf now</th><th scope="col">Plan</th><th scope="col" class="col-learned">Learned from</th></tr></thead>
+			<tbody id="board-rows"><tr class="empty"><td colspan="5">Reading the feed…</td></tr></tbody>
+		</table></div>
+		<p class="board-note">Runs the branch's <code>radar-core.ts</code> in your browser against Prometheus, starting from what it learned in a recording on 2026-10-28. Times are TCT. A fresh page needs a minute to confirm the shelves, and it has to see an empty item sell out again before it can time it.</p>
+	</section>
+</div>
+
+<main class="wrap">
+	<section aria-labelledby="adds">
+		<h2 id="adds">What the branch adds</h2>
+		<p class="prose">The Travel Table shows what is in stock right now. Shelves abroad refill on each item's own rhythm: plushies stay empty about 15 minutes, flowers about an hour, Xanax about two. For slow sellers it hardly matters when you fly. For items that sell out within minutes of a refill, you need to land as the refill happens, and flights last 24 minutes or more. The radar watches the feed in the background, learns each rhythm, and works backwards from the next restock.</p>
+		<div class="adds">
+			<div><h3>Leave-now notification</h3><p>For items you watch: fly by this time and you land at the early edge of the predicted restock window. It accounts for your ticket type.</p></div>
+			<div><h3>Restocked notification</h3><p>When a watched item comes back and should still be there when you land. It stays quiet when it would sell out mid-flight.</p></div>
+			<div><h3>Travel Radar panel</h3><p>On the Travel Agency page: every predictable item with its plan, and a bell to watch it. Off by default.</p></div>
+		</div>
+		<div class="toasts" aria-label="Example notifications, written from the live board" id="toasts">
+			<div class="toast"><strong>Notification examples</strong>They appear here, worded exactly as the extension words them, once the board above has read the feed.</div>
+		</div>
+		<figure>
+			<img src="panel.png" width="784" height="294" alt="The Travel Radar panel in TornTools' green container: six items with flag, name, country, current stock, a plan such as Leave by 01:42 with restocks ~05:35, and a bell to watch each.">
+			<figcaption>The panel from the built extension, loaded in Chromium with the radar reading Prometheus. The travel page around it is a stand-in, since the real one needs a logged-in session. Times here are local, as TornTools formats them by default.</figcaption>
+		</figure>
+	</section>
+
+	<section aria-labelledby="timing">
+		<h2 id="timing">Does the timing hold?</h2>
+		<p class="prose">The logic comes from a personal Android app I've used for a month. I ported it to TypeScript and replayed the same 48 hours of YATA history (26–28 September) through both versions. All 15 counts the Kotlin tests print came out identical in the port.</p>
+		<h3>Landing at the early edge of the predicted window</h3>
+		<div class="table-scroll"><table class="data">
+			<thead><tr><th scope="col">Item</th><th scope="col" class="num">Restock cycles</th><th scope="col" class="num">Stock still there</th></tr></thead>
+			<tbody>
+				<tr><th scope="row">Panda Plushie <span class="where">China</span></th><td class="num">120</td><td class="num">118 (98%)</td></tr>
+				<tr><th scope="row">Camel Plushie <span class="where">UAE</span></th><td class="num">121</td><td class="num">120 (99%)</td></tr>
+				<tr><th scope="row">Dahlia <span class="where">Mexico</span></th><td class="num">23</td><td class="num">23 (100%)</td></tr>
+				<tr><th scope="row">Banana Orchid <span class="where">Cayman Islands</span></th><td class="num">23</td><td class="num">23 (100%)</td></tr>
+			</tbody>
+		</table></div>
+		<p class="prose">Where timing matters most: Xanax in Japan is gone within minutes of each restock. Following the radar's plan (fly so you land at the window, wait until its late edge) found stock on 456 of 514 plans. Flying at the same moment without a plan found it on 125.</p>
+
+		<h3>Tonight, a month later</h3>
+		<p class="prose">To check the rhythms haven't changed, I recorded both feeds once a minute for 42 minutes (23:20–00:02 TCT, 2026-10-28). Prometheus answered 43 of 43 times; YATA 18 of 43, with 502s and timeouts the rest. The radar uses whichever service the user prefers and falls back like the Travel Table does.</p>
+		<div class="table-scroll"><table class="data">
+			<thead><tr><th scope="col">Seeded item</th><th scope="col" class="num">Seed: median empty minutes</th><th scope="col" class="num">Tonight: empty minutes seen</th></tr></thead>
+			<tbody>
+<tr><th scope="row">Panda Plushie <span class="where">China</span></th><td class="num">15.2</td><td class="num">none completed yet</td></tr>
+<tr><th scope="row">Camel Plushie <span class="where">UAE</span></th><td class="num">15.2</td><td class="num">none completed yet</td></tr>
+<tr><th scope="row">Dahlia <span class="where">Mexico</span></th><td class="num">59.5</td><td class="num">none completed yet</td></tr>
+<tr><th scope="row">Banana Orchid <span class="where">Cayman Islands</span></th><td class="num">56.9</td><td class="num">none completed yet</td></tr>
+<tr><th scope="row">Xanax <span class="where">United Kingdom</span></th><td class="num">122.2</td><td class="num">none completed yet</td></tr>
+<tr><th scope="row">Xanax <span class="where">Japan</span></th><td class="num">116.8</td><td class="num">none completed yet</td></tr>
+			</tbody>
+		</table></div>
+		<p class="prose">No predictable item has completed a sell-out and restock at the extension&#39;s pace yet; this section fills in as the recording runs.</p>
+		<p class="prose">Prometheus also publishes its own <code>nextRestock</code>. It is still mostly stale, as in September (46 of 60 then): 1,094 of the 1,591 values it published tonight (69%) were already in the past, and all 40 current ones sit on the old :00/:15/:30/:45 grid. For the 8 restocks with one published at least 10 minutes ahead, it was off by a median 91 minutes. The radar doesn't use it.</p>
+	</section>
+
+	<section aria-labelledby="fits">
+		<h2 id="fits">How it fits TornTools</h2>
+		<dl class="facts">
+			<dt>Off by default</dt><dd>One switch under Travel (<code>settings.pages.travel.radar</code>). It turns on the background learning and the panel. Notifications sit with the other types (<code>settings.notifications.types.travelRadar</code>) and only cover items you watch.</dd>
+			<dt>Feed use</dt><dd>One <code>fetchTravelData()</code> call every 5 minutes while it's on and the browser is open, through the user's own service priorities. No new Torn API calls: it reads the existing userdata for status (only pings when you're Okay) and ticket type.</dd>
+			<dt>Where the code is</dt><dd><code>features/travel-radar/radar-core.ts</code> (pure logic, no I/O), its tests, the panel feature, and <code>background/updates/travel-radar.ts</code>, called from <code>timedUpdates</code> like the NPC alerts. Existing files gain 36 lines: settings, the storage key, the switches and the feature registration.</dd>
+			<dt>Storage</dt><dd>One key, <code>travelRadar</code>: about 50 KB for the ~230 items the feed lists.</dd>
+			<dt>Checks run</dt><dd>288 tests pass (20 new), plus types, Svelte check, Oxlint and Oxfmt. <code>wxt build</code> for Chrome works, and the extension loads in Chromium: the background read the live feed and the panel rendered with no console errors.</dd>
+		</dl>
+	</section>
+
+	<section aria-labelledby="questions">
+		<h2 id="questions">What I'd like to know from you</h2>
+		<ol class="questions">
+			<li><strong>Polling.</strong> Is one background read every 5 minutes acceptable for users who turn this on? Reading every minute catches far more of the fast items' restocks: in the app's replay it confirmed about 83% of them, against about 33% at 5 minutes. But it's five times the load on Prometheus and YATA.</li>
+			<li><strong>Placement.</strong> A separate panel, or columns in the Travel Table (next restock, leave by, a bell)?</li>
+			<li><strong>Shape.</strong> Seeds for six items ship in code so it predicts from the first check. Fine, or learn from scratch? And one PR, or the core and background first, then the panel?</li>
+		</ol>
+	</section>
+
+	<section aria-labelledby="limits">
+		<h2 id="limits">Not tested yet</h2>
+		<ul class="limits">
+			<li>The panel on the real Travel Agency page with a logged-in session (above: the built extension on a stand-in page, with live data).</li>
+			<li>Desktop notifications in a real session with an API key. The ping rules are unit tested; the notification goes through TornTools' existing <code>dispatchNotification</code>.</li>
+			<li>The Firefox build.</li>
+			<li>Profit. You choose what to watch; the radar doesn't rank by money or capacity yet.</li>
+		</ul>
+	</section>
+</main>
+
+<footer class="wrap">
+	<p>Code: <a href="https://github.com/maurilaurits-dotcom/torntools_extension/tree/feature/travel-radar">feature/travel-radar on maurilaurits-dotcom/torntools_extension</a>, <a href="https://github.com/Mephiles/torntools_extension/compare/master...maurilaurits-dotcom:torntools_extension:feature/travel-radar">compare with master</a>.</p>
+	
+	<p>GPL-3.0, like TornTools. Stock data from Prometheus and YATA, uploaded by Torn PDA and TornTools users.</p>
+</footer>
+
+<script type="module" src="board.js"></script>
+</body>
+</html>
