@@ -1,5 +1,5 @@
 // The report's live board: the extension branch's radar core, run in the browser against Prometheus.
-import { CHECK_SECONDS, COUNTRY_NAMES, NEVER, SEED_STATS, flightSeconds, isPredictable, plan, runOutAt, splitKey, tick } from "./radar-core.js";
+import { CHECK_SECONDS, COUNTRY_NAMES, NEVER, flightSeconds, isPredictable, plan, radarStateOf, runOutAt, splitKey, statsWithSeeds, tick } from "./radar-core.js";
 
 const FEED = "https://api.prombot.co.uk/api/travel";
 const theme = new URLSearchParams(location.search).get("theme");
@@ -32,8 +32,9 @@ function cell(text, className, sub) {
 function rows() {
 	const method = ticketElement.value;
 	const at = now();
+	const stats = statsWithSeeds(state);
 	return Object.entries(state.tracker.entries)
-		.map(([key, entry]) => ({ key, entry, parts: splitKey(key), stat: state.stats[key] }))
+		.map(([key, entry]) => ({ key, entry, parts: splitKey(key), stat: stats[key] }))
 		.filter((row) => row.parts && row.stat && isPredictable(row.stat))
 		.map((row) => ({ ...row, plan: plan(at, row.stat, row.entry.inStock, row.entry.quantity, flightSeconds(row.parts.country, method)) }))
 		.sort((a, b) => order(a.plan) - order(b.plan) || a.entry.name.localeCompare(b.entry.name));
@@ -129,10 +130,9 @@ async function read() {
 
 async function start() {
 	try {
-		const warm = await (await fetch("warm-state.json")).json();
-		state = { ...warm, stats: { ...SEED_STATS, ...warm.stats } };
+		state = radarStateOf(await (await fetch("warm-state.json")).json());
 	} catch {
-		state = { tracker: { entries: {}, countrySeenAt: {} }, stats: SEED_STATS, sent: {}, lastCheck: 0 };
+		state = radarStateOf(null);
 	}
 	ticketElement.addEventListener("change", render);
 	await read();
