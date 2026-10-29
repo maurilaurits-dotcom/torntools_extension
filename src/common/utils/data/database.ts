@@ -22,6 +22,7 @@ export type DatabaseFactiondata = Writable<DefaultStorageType["factiondata"]>;
 type DatabaseQuick = Writable<DefaultStorageType["quick"]>;
 export type DatabaseLocaldata = Writable<DefaultStorageType["localdata"]>;
 export type DatabaseNpcs = Writable<DefaultStorageType["npcs"]>;
+export type DatabaseTravelRadar = Writable<DefaultStorageType["travelRadar"]>;
 export type DatabaseNotificationHistory = Writable<DefaultStorageType["notificationHistory"]>;
 export type DatabaseStockdata = Writable<DefaultStorageType["stockdata"]>;
 export type DatabaseFactionStakeouts = Writable<DefaultStorageType["factionStakeouts"]>;
@@ -42,6 +43,7 @@ export interface Database {
 	quick: DatabaseQuick;
 	localdata: DatabaseLocaldata;
 	npcs: DatabaseNpcs;
+	travelRadar: DatabaseTravelRadar;
 	notificationHistory: DatabaseNotificationHistory;
 	stockdata: DatabaseStockdata;
 	factionStakeouts: DatabaseFactionStakeouts;
@@ -66,6 +68,7 @@ export let factiondata: DatabaseFactiondata;
 export let quick: DatabaseQuick;
 export let localdata: DatabaseLocaldata;
 export let npcs: DatabaseNpcs;
+export let travelRadar: DatabaseTravelRadar;
 export let notificationHistory: DatabaseNotificationHistory;
 export let stockdata: DatabaseStockdata;
 export let factionStakeouts: DatabaseFactionStakeouts;
@@ -126,6 +129,7 @@ export async function loadDatabase(force = false): Promise<Omit<Database, "time"
 			cache: ttCache.cache,
 			api,
 			npcs,
+			travelRadar,
 			torndata,
 			notificationHistory,
 			attackHistory,
@@ -259,6 +263,7 @@ function populateDatabaseVariables(database: Database) {
 	factiondata = database.factiondata;
 	quick = database.quick;
 	npcs = database.npcs;
+	travelRadar = database.travelRadar;
 	stockdata = database.stockdata;
 	factionStakeouts = database.factionStakeouts;
 	notificationHistory = database.notificationHistory;
@@ -327,6 +332,9 @@ export function initializeDatabaseListener() {
 						break;
 					case "npcs":
 						npcs = changes.npcs.newValue as DatabaseNpcs;
+						break;
+					case "travelRadar":
+						travelRadar = changes.travelRadar.newValue as DatabaseTravelRadar;
 						break;
 					case "stockdata":
 						stockdata = changes.stockdata.newValue as DatabaseStockdata;

@@ -11,6 +11,7 @@ import { updateNPCs } from "@extension/entrypoints/background/updates/npcs";
 import { updateStakeouts } from "@extension/entrypoints/background/updates/stakeouts";
 import { updateStocks } from "@extension/entrypoints/background/updates/stockdata";
 import { updateTorndata } from "@extension/entrypoints/background/updates/torndata";
+import { updateTravelRadar } from "@extension/entrypoints/background/updates/travel-radar";
 import { updateUserdata } from "@extension/entrypoints/background/updates/userdata";
 
 let lockTimedUpdates = false;
@@ -82,6 +83,12 @@ export async function timedUpdates() {
 					if (alerts) logger.info(`Sent out ${alerts} npc alerts.`);
 				})
 				.catch((error) => logError("updating npcs", error)),
+			updateTravelRadar()
+				.then(({ updated, alerts }) => {
+					if (updated) logger.info("Updated the travel radar.");
+					if (alerts) logger.info(`Sent out ${alerts} travel radar alerts.`);
+				})
+				.catch((error) => logError("updating the travel radar", error)),
 			verifyTime().catch((error) => logError("Failed to verify your time to be synced.", error)),
 		);
 

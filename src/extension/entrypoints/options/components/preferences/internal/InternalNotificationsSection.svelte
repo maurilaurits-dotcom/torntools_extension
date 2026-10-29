@@ -30,6 +30,7 @@
 				<StorageSwitch path="settings.notifications.types.messages" label="Messages" compact disabled={notificationsDisabled} />
 				<StorageSwitch path="settings.notifications.types.status" label="Status change" compact disabled={notificationsDisabled} />
 				<StorageSwitch path="settings.notifications.types.traveling" label="Traveling" compact disabled={notificationsDisabled} />
+				<StorageSwitch path="settings.notifications.types.travelRadar" label="Travel radar" compact disabled={notificationsDisabled} />
 				<StorageSwitch path="settings.notifications.types.education" label="Education" compact disabled={notificationsDisabled} />
 				<StorageSwitch path="settings.notifications.types.newDay" label="New day" compact disabled={notificationsDisabled} />
 				<NotificationListInput typeKey="offline" label="Offline for over hours" disabled={notificationsDisabled} />

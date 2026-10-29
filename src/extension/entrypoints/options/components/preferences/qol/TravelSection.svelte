@@ -40,6 +40,11 @@
 
 				<StorageSwitch path="settings.pages.travel.autoTravelTableCountry" label="Update country in travel table filter as per map selections" />
 			</StorageSwitch>
+			<StorageSwitch
+				path="settings.pages.travel.radar"
+				label="Learn foreign restock times in the background and show a travel radar with when to leave"
+				externalServices={["prometheus", "tornintel", "yata"]}
+			/>
 			<StorageSwitch path="settings.pages.travel.flyingTime" label="Show the time when you would land when flying now" />
 			<StorageSwitch path="settings.pages.travel.cooldownWarnings" label="Show warnings if cooldowns will be over when you land back in Torn" />
 		</PreferenceSettingGroup>

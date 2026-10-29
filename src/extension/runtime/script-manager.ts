@@ -242,6 +242,7 @@ import TradeTimerFeature from "@features/trade-timer/trade-timer";
 import TradeValuesFeature from "@features/trade-values/trade-values";
 import TravelCooldownsFeature from "@features/travel-cooldowns/travel-cooldowns";
 import TravelItemProfitsFeature from "@features/travel-item-profits/travel-item-profits";
+import TravelRadarFeature from "@features/travel-radar/travel-radar";
 import TravelTabTitleTimerFeature from "@features/travel-tab-title-timer/travel-tab-title-timer";
 import TravelTableFeature from "@features/travel-table/travel-table";
 import TravelSyncFeature from "@features/travel-table/travel-table-sync";
@@ -335,6 +336,7 @@ export function scriptManager() {
 		setupTravelAbroadPage().catch(logger.error);
 		setupTravelHomePage().catch(logger.error);
 		FEATURE_MANAGER.registerFeature(new TravelTableFeature());
+		FEATURE_MANAGER.registerFeature(new TravelRadarFeature());
 		FEATURE_MANAGER.registerFeature(new TravelSyncFeature());
 		FEATURE_MANAGER.registerFeature(new AbroadItemsFilterFeature());
 		FEATURE_MANAGER.registerFeature(new AbroadEnergyWarningFeature());
