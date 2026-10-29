@@ -6,7 +6,8 @@
 		"logs": {
 			"features": [
 				{ "message": "Show gym details for locked gyms on hover.", "contributor": "DeKleineKobini" },
-				{ "message": "Remember the native sort and filter of the friends, enemies and targets lists.", "contributor": "DeKleineKobini" }
+				{ "message": "Remember the native sort and filter of the friends, enemies and targets lists.", "contributor": "DeKleineKobini" },
+				{ "message": "Add a Travel Radar that learns foreign restock times and tells you when to fly.", "contributor": "Ech01337" }
 			],
 			"fixes": [
 				{ "message": "Stop the import dialog from growing beyond the screen.", "contributor": "xhang98" },

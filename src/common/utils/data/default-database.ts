@@ -13,6 +13,7 @@ import type { SavedCustomLink } from "@features/custom-links/custom-links";
 import type { StoredHiddenFeeds } from "@features/only-new-feed/only-new-feed";
 import type { QuickItem } from "@features/quick-items/shared/quick-items-common.ts";
 import type { StoredResizableChats } from "@features/resizable-chat/resizable-chat";
+import type { RadarState } from "@features/travel-radar/radar-core";
 import type { UserAlias } from "@features/user-alias/alias";
 import type { TornItem, TornStock, UserLastActionStatusEnum } from "tornapi-typescript";
 
@@ -112,6 +113,7 @@ export const DEFAULT_STORAGE = {
 				chainMinimum: new DefaultSetting("number", 10),
 				leavingHospital: new DefaultSetting<number[]>("array", []),
 				landing: new DefaultSetting<number[]>("array", []),
+				travelRadar: new DefaultSetting("boolean", true),
 				cooldownDrug: new DefaultSetting<number[]>("array", []),
 				cooldownBooster: new DefaultSetting<number[]>("array", []),
 				cooldownMedical: new DefaultSetting<number[]>("array", []),
@@ -331,6 +333,8 @@ export const DEFAULT_STORAGE = {
 				efficientRehabSelect: new DefaultSetting("boolean", false),
 				hideInventoryButton: new DefaultSetting("boolean", true),
 				fastHunting: new DefaultSetting("boolean", true),
+				radar: new DefaultSetting("boolean", false),
+				radarWatched: new DefaultSetting<string[]>("array", []),
 			},
 			stocks: {
 				filter: new DefaultSetting("boolean", true),
@@ -969,6 +973,7 @@ export const DEFAULT_STORAGE = {
 	},
 	cache: new DefaultSetting<DatabaseCache>("object", {}),
 	npcs: new DefaultSetting<StoredNpcs>("object", {} as StoredNpcs),
+	travelRadar: new DefaultSetting<RadarState>("object", { tracker: { entries: {}, countrySeenAt: {} }, stats: {}, sent: {}, lastCheck: 0 }),
 	notificationHistory: new DefaultSetting<TTNotification[]>("array", []),
 	notifications: {
 		events: new DefaultSetting<NotificationMap>("object", {}),

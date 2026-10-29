@@ -54,6 +54,7 @@ export const PREFERENCE_SEARCH_DATA: readonly SearchablePreference[] = [
 	{ path: "settings.notifications.types.offline", label: "Notification: Offline hours", group: "internal", section: "notifications" },
 	{ path: "settings.notifications.types.leavingHospitalEnabled", label: "Notification: Leaving hospital", group: "internal", section: "notifications" },
 	{ path: "settings.notifications.types.landingEnabled", label: "Notification: Landing", group: "internal", section: "notifications" },
+	{ path: "settings.notifications.types.travelRadar", label: "Notification: Travel radar", group: "internal", section: "notifications" },
 	{ path: "settings.notifications.types.energy", label: "Notification: Energy", group: "internal", section: "notifications" },
 	{ path: "settings.notifications.types.nerve", label: "Notification: Nerve", group: "internal", section: "notifications" },
 	{ path: "settings.notifications.types.happy", label: "Notification: Happy", group: "internal", section: "notifications" },
@@ -438,6 +439,13 @@ export const PREFERENCE_SEARCH_DATA: readonly SearchablePreference[] = [
 		group: "qol",
 		section: "travel",
 		keywords: ["travel table"],
+	},
+	{
+		path: "settings.pages.travel.radar",
+		label: "Learn foreign restock times in the background and show a travel radar with when to leave",
+		group: "qol",
+		section: "travel",
+		keywords: ["travel radar", "restock"],
 	},
 	{
 		path: "settings.pages.travel.autoTravelTableCountry",

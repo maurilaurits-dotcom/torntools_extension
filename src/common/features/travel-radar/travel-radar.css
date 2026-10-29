@@ -1,0 +1,114 @@
+#tt-travel-radar {
+	width: 100%;
+
+	.tt-radar-row {
+		display: flex;
+		align-items: center;
+		min-height: 26px;
+		border-top: 1px solid lightgray;
+		color: var(--default-color);
+		line-height: 20px;
+
+		&.header {
+			border-top: unset;
+			font-weight: bold;
+		}
+
+		&.watched {
+			background-color: color-mix(in srgb, var(--tt-color-green) 12%, transparent);
+		}
+
+		& > * {
+			padding: 2px 4px;
+		}
+
+		.item {
+			display: flex;
+			flex: 3;
+			align-items: center;
+			gap: 6px;
+
+			.flag {
+				width: 22px;
+			}
+
+			.icon {
+				height: 20px;
+			}
+
+			.name {
+				display: flex;
+				flex-direction: column;
+				line-height: 15px;
+			}
+
+			.country {
+				opacity: 0.65;
+				font-size: 11px;
+			}
+		}
+
+		.status {
+			flex: 1.5;
+		}
+
+		.plan {
+			display: flex;
+			flex: 1.5;
+			flex-direction: column;
+			line-height: 15px;
+
+			.detail {
+				color: var(--default-color);
+				font-weight: normal;
+				opacity: 0.7;
+				font-size: 11px;
+			}
+
+			&.go-now {
+				color: var(--tt-color-green);
+				font-weight: bold;
+			}
+
+			&.leave-by {
+				color: var(--tt-color-blue);
+			}
+
+			&.muted {
+				opacity: 0.6;
+			}
+		}
+
+		.watch {
+			flex: 0 0 56px;
+			text-align: center;
+		}
+
+		button.watch {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 24px;
+			border: none;
+			background: none;
+			color: var(--default-color);
+			font-size: 16px;
+			cursor: pointer;
+
+			&[aria-pressed="true"] {
+				color: var(--tt-color-green);
+			}
+
+			&:focus-visible {
+				outline: 2px solid var(--tt-color-blue);
+				outline-offset: -2px;
+			}
+		}
+	}
+
+	.tt-radar-footer {
+		margin: 6px 4px 2px;
+		opacity: 0.75;
+		font-size: 11px;
+	}
+}
