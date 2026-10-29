@@ -1,4 +1,4 @@
-// src/common/features/travel-radar/radar-core.ts
+// Projects/torntools_extension/src/common/features/travel-radar/radar-core.ts
 var COUNTRY_CODES = ["mex", "cay", "can", "haw", "uni", "arg", "swi", "jap", "chi", "uae", "sou"];
 var COUNTRY_NAMES = {
   mex: "Mexico",

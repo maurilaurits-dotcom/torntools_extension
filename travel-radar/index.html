@@ -170,21 +170,29 @@ footer p { margin: 4px 0; }
 		</table></div>
 		<p class="prose">Where timing matters most: Xanax in Japan is gone within minutes of each restock. Following the radar's plan (fly so you land at the window, wait until its late edge) found stock on 456 of 514 plans. Flying at the same moment without a plan found it on 125.</p>
 
-		<h3>Tonight, a month later</h3>
-		<p class="prose">To check the rhythms haven't changed, I recorded both feeds once a minute for 42 minutes (23:20–00:02 TCT, 2026-10-28). Prometheus answered 43 of 43 times; YATA 18 of 43, with 502s and timeouts the rest. The radar uses whichever service the user prefers and falls back like the Travel Table does.</p>
+		<h3>Overnight, a month later</h3>
+		<p class="prose">To check the rhythms haven't changed, I recorded both feeds once a minute for 6.2 hours (2026-10-28 23:20 to 2026-10-29 05:31 TCT, apart from one gap of 33 minutes from 04:35 while my laptop slept). Prometheus answered 338 of 341 times; YATA 70 of 341, with 502s and timeouts the rest. The radar uses whichever service the user prefers and falls back like the Travel Table does.</p>
 		<div class="table-scroll"><table class="data">
-			<thead><tr><th scope="col">Seeded item</th><th scope="col" class="num">Seed: median empty minutes</th><th scope="col" class="num">Tonight: empty minutes seen</th></tr></thead>
+			<thead><tr><th scope="col">Seeded item</th><th scope="col" class="num">Seed: median empty minutes</th><th scope="col" class="num">Overnight: empty minutes seen</th></tr></thead>
 			<tbody>
-<tr><th scope="row">Panda Plushie <span class="where">China</span></th><td class="num">15.2</td><td class="num">none completed yet</td></tr>
-<tr><th scope="row">Camel Plushie <span class="where">UAE</span></th><td class="num">15.2</td><td class="num">none completed yet</td></tr>
-<tr><th scope="row">Dahlia <span class="where">Mexico</span></th><td class="num">59.5</td><td class="num">none completed yet</td></tr>
-<tr><th scope="row">Banana Orchid <span class="where">Cayman Islands</span></th><td class="num">56.9</td><td class="num">none completed yet</td></tr>
-<tr><th scope="row">Xanax <span class="where">United Kingdom</span></th><td class="num">122.2</td><td class="num">none completed yet</td></tr>
-<tr><th scope="row">Xanax <span class="where">Japan</span></th><td class="num">116.8</td><td class="num">none completed yet</td></tr>
+<tr><th scope="row">Panda Plushie <span class="where">China</span></th><td class="num">15.2</td><td class="num">16.8, 16.7, 13.6</td></tr>
+<tr><th scope="row">Camel Plushie <span class="where">UAE</span></th><td class="num">15.2</td><td class="num">15.4, 16.9, 16.3</td></tr>
+<tr><th scope="row">Dahlia <span class="where">Mexico</span></th><td class="num">59.5</td><td class="num">64.1</td></tr>
+<tr><th scope="row">Banana Orchid <span class="where">Cayman Islands</span></th><td class="num">56.9</td><td class="num">none seen</td></tr>
+<tr><th scope="row">Xanax <span class="where">United Kingdom</span></th><td class="num">122.2</td><td class="num">none seen</td></tr>
+<tr><th scope="row">Xanax <span class="where">Japan</span></th><td class="num">116.8</td><td class="num">111.6</td></tr>
 			</tbody>
 		</table></div>
-		<p class="prose">No predictable item has completed a sell-out and restock at the extension&#39;s pace yet; this section fills in as the recording runs.</p>
-		<p class="prose">Prometheus also publishes its own <code>nextRestock</code>. It is still mostly stale, as in September (46 of 60 then): 1,094 of the 1,591 values it published tonight (69%) were already in the past, and all 40 current ones sit on the old :00/:15/:30/:45 grid. For the 8 restocks with one published at least 10 minutes ahead, it was off by a median 91 minutes. The radar doesn't use it.</p>
+		<p class="prose">Replayed at the extension&#39;s own pace (one reading every 5 minutes, starting from the seeds), the radar timed 18 restocks from the moment the item sold out. Landing at the early edge of each window would have found stock 18 times out of 18, after waiting a median 2.3 minutes for the restock and at most 10 (Dahlia). One of them sold out again before the next 5-minute reading, so the radar itself only glimpsed it. 3 came before the window opened, and the stock was still there at landing each time. The windows are tight, a median 2.5 minutes wide, so only 8 restocks fell strictly inside one and 7 came after. As a control, the same windows moved 30 minutes later contained 0 of them.</p>
+		<p class="prose">How far each forecast was from the actual restock, using only what was known when the radar saw the item sell out:</p>
+		<div class="table-scroll"><table class="data">
+			<thead><tr><th scope="col">The same 18 restocks</th><th scope="col" class="num">Radar, window centre</th><th scope="col" class="num">Prometheus <code>nextRestock</code></th></tr></thead>
+			<tbody>
+				<tr><th scope="row">Median miss</th><td class="num">1.4 min</td><td class="num">21.4 min</td></tr>
+				<tr><th scope="row">Within 2 minutes</th><td class="num">14</td><td class="num">1</td></tr>
+			</tbody>
+		</table></div>
+		<p class="prose">Across every item, Prometheus' <code>nextRestock</code> is still mostly stale, as in September (46 of 60 then): 7,471 of the 10,425 values it published overnight (72%) were already in the past, and all 22 current ones sit on the old :00/:15/:30/:45 grid. For the 99 restocks with one published at least 10 minutes ahead, it was off by a median 35 minutes. The radar doesn't use it.</p>
 	</section>
 
 	<section aria-labelledby="fits">
@@ -192,16 +200,16 @@ footer p { margin: 4px 0; }
 		<dl class="facts">
 			<dt>Off by default</dt><dd>One switch under Travel (<code>settings.pages.travel.radar</code>). It turns on the background learning and the panel. Notifications sit with the other types (<code>settings.notifications.types.travelRadar</code>) and only cover items you watch.</dd>
 			<dt>Feed use</dt><dd>One <code>fetchTravelData()</code> call every 5 minutes while it's on and the browser is open, through the user's own service priorities. No new Torn API calls: it reads the existing userdata for status (only pings when you're Okay) and ticket type.</dd>
-			<dt>Where the code is</dt><dd><code>features/travel-radar/radar-core.ts</code> (pure logic, no I/O), its tests, the panel feature, and <code>background/updates/travel-radar.ts</code>, called from <code>timedUpdates</code> like the NPC alerts. Existing files gain 36 lines: settings, the storage key, the switches and the feature registration.</dd>
-			<dt>Storage</dt><dd>One key, <code>travelRadar</code>: about 50 KB for the ~230 items the feed lists.</dd>
-			<dt>Checks run</dt><dd>288 tests pass (20 new), plus types, Svelte check, Oxlint and Oxfmt. <code>wxt build</code> for Chrome works, and the extension loads in Chromium: the background read the live feed and the panel rendered with no console errors.</dd>
+			<dt>Where the code is</dt><dd><code>features/travel-radar/radar-core.ts</code> (pure logic, no I/O), its tests, the panel feature, and <code>background/updates/travel-radar.ts</code>, called from <code>timedUpdates</code> like the NPC alerts. Existing files change by 38 lines: settings, the storage key, the switches, the feature registration and the changelog.</dd>
+			<dt>Storage</dt><dd>One key, <code>travelRadar</code>: 58 KB after the overnight recording, for the 230 items the feed lists.</dd>
+			<dt>Checks run</dt><dd>304 tests pass (36 new), plus types, Svelte check, Oxlint and Oxfmt. <code>wxt build</code> for Chrome works, and the extension loads in Chromium: the background read the live feed and the panel rendered with no console errors.</dd>
 		</dl>
 	</section>
 
 	<section aria-labelledby="questions">
 		<h2 id="questions">What I'd like to know from you</h2>
 		<ol class="questions">
-			<li><strong>Polling.</strong> Is one background read every 5 minutes acceptable for users who turn this on? Reading every minute catches far more of the fast items' restocks: in the app's replay it confirmed about 83% of them, against about 33% at 5 minutes. But it's five times the load on Prometheus and YATA.</li>
+			<li><strong>Polling.</strong> Is one background read every 5 minutes acceptable for users who turn this on? Reading every minute catches far more of the fast items' restocks: in the app's replay of 48 hours it confirmed about 83% of them, against about 33% at 5 minutes. Overnight, when shelves drain slowly, the gap mostly closes: 5 minutes confirmed 89 of the 104 restocks the 1-minute recording saw. Reading every minute is five times the load on Prometheus and YATA.</li>
 			<li><strong>Placement.</strong> A separate panel, or columns in the Travel Table (next restock, leave by, a bell)?</li>
 			<li><strong>Shape.</strong> Seeds for six items ship in code so it predicts from the first check. Fine, or learn from scratch? And one PR, or the core and background first, then the panel?</li>
 		</ol>
