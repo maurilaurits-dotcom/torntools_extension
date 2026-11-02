@@ -1,7 +1,7 @@
-#tt-travel-radar {
+.radar {
 	width: 100%;
 
-	.tt-radar-row {
+	.row {
 		display: flex;
 		align-items: center;
 		min-height: 26px;
@@ -15,7 +15,7 @@
 		}
 
 		&.watched {
-			background-color: color-mix(in srgb, var(--tt-color-green) 12%, transparent);
+			background-color: var(--tt-color-green--20);
 		}
 
 		& > * {
@@ -106,7 +106,7 @@
 		}
 	}
 
-	.tt-radar-footer {
+	.footer {
 		margin: 6px 4px 2px;
 		opacity: 0.75;
 		font-size: 11px;

@@ -30,7 +30,6 @@ function mexico(update: number, quantity: number, cost = 300): FeedSnapshot {
 	return { mex: { update, stocks: [{ id: DAHLIA, name: "Dahlia", quantity, cost }] } };
 }
 
-/** Readings one check apart, starting at T0, returning every event they confirmed. */
 function replay(quantities: number[], costs: number[] = []) {
 	let tracker = emptyTracker();
 	const events: StockEvent[] = [];
@@ -178,7 +177,6 @@ describe("travel radar", () => {
 		const user = { canFly: true, method: "standard" as const };
 		const LEAD = 180;
 
-		/** A Dahlia with three ~58 min gaps learned that sells out at T0 + 450, seen at every check since. */
 		function emptyDahlia(): RadarState {
 			let state: RadarState = { ...initialRadarState(), stats: { "mex:260": statWithGaps([57, 58, 59]) } };
 			[500, 500, 0, 0].forEach((quantity, i) => {
@@ -188,7 +186,6 @@ describe("travel radar", () => {
 			return state;
 		}
 
-		/** One check per CHECK_SECONDS, each seeing a fresh upload, collecting every ping with its time. */
 		function checks(state: RadarState, from: number, until: number, quantity: (now: number) => number, options: Partial<TickInput> = {}) {
 			const pings: { at: number; ping: RadarPing }[] = [];
 			for (let now = from; now <= until; now += CHECK_SECONDS) {

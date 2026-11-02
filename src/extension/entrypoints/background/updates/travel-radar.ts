@@ -10,11 +10,9 @@ import type { RadarPing, RadarState, RadarUser } from "@features/travel-radar/ra
 import { fetchTravelData } from "@features/travel-table/travel-data-fetcher";
 import { dispatchNotification, newNotification } from "../notifications";
 
-/** The data alarm fires every 30 s; a check is due once CHECK_SECONDS have nearly passed. */
+// The data alarm fires every 30 s; a check is due once CHECK_SECONDS have nearly passed.
 const DUE_TOLERANCE = 15;
-/** Heads-up before the leave-by time. */
 const LEAD_SECONDS = 180;
-/** Pings that assume "you can fly now" trust the Torn status only this long. */
 const STATUS_MAX_AGE = (CHECK_SECONDS + 60) * TO_MILLIS.SECONDS;
 
 export async function updateTravelRadar(): Promise<{ updated: boolean; alerts: number }> {
@@ -47,7 +45,6 @@ export async function updateTravelRadar(): Promise<{ updated: boolean; alerts: n
 	return { updated: true, alerts };
 }
 
-/** Reads the feed, learns from it and stores the result; returns the pings that are due. */
 async function check(stored: RadarState, now: number): Promise<RadarPing[]> {
 	const { stocks } = await fetchTravelData();
 	if (!stocks) {
